@@ -48,7 +48,14 @@ zero, you can stop calculating product and return 0 immediately.
 84
 -}
 lazyProduct :: [Int] -> Int
-lazyProduct = error "TODO"
+lazyProduct = go 1
+  where
+    go :: Int -> [Int] -> Int
+    go acc [] = acc
+    go acc (x:xs)
+      | x == 0 = 0
+      | otherwise = go (acc * x) xs
+
 
 {- | Implement a function that duplicates every element in the list.
 
@@ -58,7 +65,8 @@ lazyProduct = error "TODO"
 "ccaabb"
 -}
 duplicate :: [a] -> [a]
-duplicate = error "TODO"
+duplicate [] = []
+duplicate (x:xs) = x: x : duplicate xs
 
 {- | Implement function that takes index and a list and removes the
 element at the given position. Additionally, this function should also
@@ -70,7 +78,14 @@ return the removed element.
 >>> removeAt 10 [1 .. 5]
 (Nothing,[1,2,3,4,5])
 -}
-removeAt = error "TODO"
+removeAt :: Int -> [a] -> (Maybe a, [a])
+removeAt index list = if index < 0 then (Nothing, list) else go 0 [] list
+  where
+    go :: Int -> [a] -> [a] -> (Maybe a, [a])
+    go _ a [] = (Nothing, a)
+    go pos heads (x:xs)
+      | pos == index = (Just x, heads ++ xs)
+      | otherwise = go (pos + 1) (heads ++ [x]) xs
 
 {- | Write a function that takes a list of lists and returns only
 lists of even lengths.
@@ -81,7 +96,8 @@ lists of even lengths.
 ♫ NOTE: Use eta-reduction and function composition (the dot (.) operator)
   in this function.
 -}
-evenLists = error "TODO"
+evenLists :: [[a]] -> [[a]]
+evenLists = filter (even . length)
 
 {- | The @dropSpaces@ function takes a string containing a single word
 or number surrounded by spaces and removes all leading and trailing
